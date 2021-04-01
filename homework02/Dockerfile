@@ -16,4 +16,3 @@ RUN chmod +rx /code/generate_animals.py && \
     chmod +rx /code/test_read_animals.py
 
 ENV PATH "/code:$PATH"
-
