@@ -1,11 +1,11 @@
 import json
 from flask import Flask, request
-import redis as rd
+import redis
 import datetime
 import random as r
 
 app = Flask(__name__)
-rd = redis.StrictRedis(host='krilljs-redis', port=6379, db=0)
+rd = redis.StrictRedis(host='krilljs-redis', port='6379', db=0)
 
 # returns all animals
 @app.route('/animals', methods=['GET'])
@@ -45,7 +45,7 @@ def get_uid():
     return json.dumps([x for x in animals if x['uid'] == uid])
 
 # edits animal based on its uid
-@app.route('animals/edit', methods=['GET'])
+@app.route('/animals/edit', methods=['GET'])
 def edit_creature():
     # collect necessary data from user
     uid = str(request.args.get('uid'))
@@ -70,7 +70,7 @@ def edit_creature():
         return json.dumps([x for x in animals if x['uid'] == uid])
 
 # deletes animals within date range
-@app.route('animals/delete', methods=['GET'])
+@app.route('/animals/delete', methods=['GET'])
 def delete_animals():
     # get start date
     start = request.args.get('start')
@@ -80,12 +80,12 @@ def delete_animals():
     end_date = datetime.date.time.strptime(end, "'%Y-%m-%d_%H:%M:%S.%f'")
     animals = getdata()
     # remove animals from database if they fall within the date range
-    output = [animals.remove(x) for x in animals if (datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f'") >= start_date and datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f'") <= end_date ) ])]
+    output = [animals.remove(x) for x in animals if (datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f'") >= start_date and datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f'") <= end_date )]
     # return removed animals so user can see what was removed
     return json.dumps(output)
 
 # calcualte the average number of legs
-@app.route('animals/avglegs', methods=['GET']
+@app.route('/animals/avglegs', methods=['GET'])
 def average_legs():
     animals = getdata()
     legs = 0
@@ -99,7 +99,7 @@ def average_legs():
     return avg
 
 # counts the number of animals
-@app.route('animals/count', methods=['GET']
+@app.route('/animals/count', methods=['GET'])
 def count():
     count = 0
     for x in animals:
@@ -148,4 +148,4 @@ def getdata():
 
 # the next statement should usually appear at the bottom of a flask app
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5016))
+    app.run(debug=True, host='0.0.0.0', port='5016')
