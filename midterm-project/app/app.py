@@ -1,6 +1,8 @@
 import json
-from flask import Flask
+from flask import Flask, request
 import redis as rd
+import datetime
+import random as r
 
 app = Flask(__name__)
 rd = redis.StrictRedis(host='krilljs-redis', port=6379, db=0)
@@ -35,7 +37,7 @@ def get_dates():
     end_date = datetime.datetime.strptime(end, "'%Y-%m-%d_%H:%M:%S.%f'")
     animals = getdata()
     # return animals within the date range
-    return json.dumps([x for x in animals if (datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f'") >= start_date and datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f')"<= end_date ) ])
+    return json.dumps([x for x in animals if (datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f'") >= start_date and datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f'") <= end_date ) ])
 
 # gets animal that matches the inputted uid
 @app.route('/animals/id/<uid>', methods=['GET'])
@@ -78,7 +80,7 @@ def delete_animals():
     end_date = datetime.date.time.strptime(end, "'%Y-%m-%d_%H:%M:%S.%f'")
     animals = getdata()
     # remove animals from database if they fall within the date range
-    output = [animals.remove(x) for x in animals if (datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f'") >= d1_date and datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f')"<=     d2_date ) ])]
+    output = [animals.remove(x) for x in animals if (datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f'") >= start_date and datetime.datetime.strptime( x['created_on'], "'%Y-%m-%d_%H:%M:%S.%f'") <= end_date ) ])]
     # return removed animals so user can see what was removed
     return json.dumps(output)
 
