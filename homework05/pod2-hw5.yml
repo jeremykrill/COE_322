@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: greeting-personalized-name
+spec:
+  containers:
+    - name: greeting-personalized-name
+      image: ubuntu:18.04
+      env:
+        - name: "NAME"
+          value: "Jeremy" 
+      command: ['sh', '-c', 'echo "Hello, $NAME!" && sleep 3600']
