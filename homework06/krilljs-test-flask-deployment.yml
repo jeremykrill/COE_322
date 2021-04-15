@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+    name: krilljs-test-flask-deployment
+    labels:
+        app: krilljs-test-flask
+        username: krilljs
+        env: test
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: krilljs-test-flask
+    template:
+        metadata:
+            labels:
+                app: krilljs-test-flask
+                username: krilljs
+                env: test
+        spec:
+            containers:
+                - name: krilljs-flask-homework06
+                  imagePullPolicy: Always
+                  image: krilljs/animals
+                  env:
+                  - name: FLASK_APP_HMWK_06
+                    value: "app.py"
+                  - name: REDIS_IP
+                    value: "10.244.12.17"
+                  ports:
+                  - name: http
+                    containerPort: 5000

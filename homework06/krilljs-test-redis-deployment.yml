@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: krilljs-test-redis-deployment
+    labels:
+        app: krilljs-test-redis
+        username: krilljs
+        env: test
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: krilljs-test-redis
+    template:
+        metadata: 
+            labels:
+                app: krilljs-test-redis
+                username: krilljs
+                env: test
+        spec:
+            containers:
+                - name: hellos
+                  image: redis:5.0.0
+                  volumeMounts:
+                  - name: krilljs-test-redis-pvc-data
+                    mountPath: "/data"
+            volumes:
+            - name: krilljs-test-redis-pvc-data
+              persistentVolumeClaim:
+                claimName: krilljs-test-redis-pvc-data
