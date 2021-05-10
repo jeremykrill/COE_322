@@ -1,8 +1,8 @@
 # api.py
-from flask import Flask, request, jsonify
+from flask import Flask, request
 import json
-from jobs import add_job, rd, j, image #check names
-from data import get_keys #check names
+from jobs import add_job, rd, j, image
+from data import return_keys
 
 app = Flask(__name__)
 
