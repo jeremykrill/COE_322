@@ -4,7 +4,7 @@ This is my final project for COE 332. The system is a web app that interfaces wi
 
 The user interfaces with the Redis database server via a Flask server, and implements a worker that reads jobs from a queue. The jobs in this case are plots of the returns over a given time period. It deploys over a test and prod environment, depending on the user/developer's needs. The corresponding Kubernetes deployments for these environemtns are contained in the k8s directory. Meanwhile, the app directory contains the source files for supporting the system, the docker directory contains the necessary Dockerfiles for the api and the worker images, and the data directory contains the datafiles. Below are corresponding deployment and user documentations. May your stonks only go up!
 
-## Deployment ##i
+## Deployment ##
 
 First, deploy the redis service, and make sure the pvc is deployed as well
 ```bash
