@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: krilljs-final-test-worker-deployment
+  labels:
+    username: krilljs
+    env: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      username: krilljs
+      env: test
+  template:
+    metadata:
+      labels:
+        username: krilljs
+        env: test
+        app: krilljs-test-worker
+    spec:
+      containers:
+        - name: test
+          imagePullPolicy: Always
+          image: jeremykrill/final-project-app:latest
+          args: ["worker.py"]
+          env:
+          - name: REDIS_IP
+            value: "0.0.0.0" # Change this to the Cluster IP of the redis service
+          - name: PYTHONUNBUFFERED
+            value: "0"
+          - name: WORKER_IP
+            valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP

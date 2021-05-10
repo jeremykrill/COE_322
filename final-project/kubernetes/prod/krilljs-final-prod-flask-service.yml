@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: krilljs-final-prod-flask-service
+  labels:
+    username: krilljs
+    env: prod
+spec:
+  type: ClusterIP
+  selector:
+    username: krilljs
+    env: prod
+    app: krilljs-final-prod-flask
+  ports:
+  - name: krilljs-final-prod-flask
+    port: 5000
+    targetPort: 5000

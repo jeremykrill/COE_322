@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: krilljs-final-prod-redis-deployment
+  labels:
+    username: krilljs
+    env: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      username: krilljs
+      env: prod
+  template:
+    metadata:
+      labels:
+        username: krilljs
+        env: prod
+        app: krilljs-final-prod-redis
+    spec:
+      containers:
+        - name: redis
+          imagePullPolicy: Always
+          image: redis:5.0.0
+          ports:
+          - name: http
+            containerPort: 6379
+          volumeMounts:
+          - name: krilljs-final-prod-redis-pvc
+            mountPath: "/data"
+      volumes:
+      - name: krilljs-final-prod-redis-pvc
+        persistentVolumeClaim:
+          claimName: krilljs-final-prod-redis-pvc

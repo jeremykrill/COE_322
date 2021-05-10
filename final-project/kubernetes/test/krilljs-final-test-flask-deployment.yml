@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: krilljs-final-test-flask-deployment
+  labels:
+    username: krilljs
+    env: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      username: krilljs
+      env: test
+  template:
+    metadata:
+      labels:
+        username: krilljs
+        env: test
+        app: krilljs-final-test-flask
+    spec:
+      containers:
+        - name: test
+          imagePullPolicy: Always
+          image: jeremykrill/final-project-app:latest
+          args: ["api.py"]
+          env:
+          - name: FLASK_APP
+            value: "api.py"
+          - name: FLASK_ENV
+            value: "development"
+          - name: REDIS_IP
+            value: "0.0.0.0" # Change this to the Cluster IP of the redis service
+          ports:
+          - name: http
+            containerPort: 5000
