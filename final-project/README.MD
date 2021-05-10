@@ -4,53 +4,53 @@ This is my final project for COE 332. The system is a web app that interfaces wi
 
 The user interfaces with the Redis database server via a Flask server, and implements a worker that reads jobs from a queue. The jobs in this case are plots of the returns over a given time period. It deploys over a test and prod environment, depending on the user/developer's needs. The corresponding Kubernetes deployments for these environemtns are contained in the k8s directory. Meanwhile, the app directory contains the source files for supporting the system, the docker directory contains the necessary Dockerfiles for the api and the worker images, and the data directory contains the datafiles. Below are corresponding deployment and user documentations. May your stonks only go up!
 
-## Deployment ##
+## Deployment ##i
 
 First, deploy the redis service, and make sure the pvc is deployed as well
-'''bash
+```bash
 [krilljs@isp02 test]$ kubectl apply -f krilljs-final-test-redis-pvc.yml
 [krilljs@isp02 test]$ kubectl apply -f krilljs-final-test-redis-service.yml
-'''
+```
 
 Next, get the redis IP address, and enter it in the jobs.py file
-'''bash
+```bash
 [krilljs@isp02 test]$ kubectl get services -o wide
 [krilljs@isp02 app]$ vim jobs.py
-'''
+```
 
 After the redis services are up and running, and we've accordingly adjusted jobs.py, our next step is to build the Docker images and push to Dockerhub. We use the following commands:
-'''bash
+```bash
 [krilljs@isp02 app]$ docker build -f krilljs/COE_332/final-project/docker/Dockerfile.api krilljs/final-project-api:1.0 .
 [krilljs@isp02 app]$ docker build -f krilljs/COE_332/final-project/docker/Dockerfile.worker krilljs/final-project-worker:1.0 .
 [krilljs@isp02 app]$ docker push krilljs/final-project-api:1.0
 [krilljs@isp02 app]$ docker push krilljs/final-project-worker:1.0
-'''
+```
 
 In the k8s yaml files, make sure the image version selections are correct. Then, in the test directory, finish deploying k8s:
-'''bash
+```bash
 [krilljs@isp02 test]$ kubectl apply -f krilljs-final-test-redis-deployment.yml
 [krilljs@isp02 test]$ kubectl apply -f krilljs-final-test-flask-deployment.yml
 [krilljs@isp02 test]$ kubectl apply -f krilljs-final-test-flask-service.yml
 [krilljs@isp02 test]$ kubectl apply -f krilljs-final-test-worker-deployment.yml
-'''
+```
 
 Make sure everything's running as planned. Repeat in the prod directory, replace "test" with "prod" as necessary above.
 
 ## User ##
 Deploy the pythonDebug deployment to start playing with the system:
-'''bash
+```bash
 [krilljs@isp02 test]$ kubectl apply -f krilljs-pythonDebug-deployment.yml
-'''
+```
 
 Record the IP address for the flask service so we can curl into it:
-'''bash
+```bash
 [krilljs@isp02 test]$ kubectl get services
-'''
+```
 
 Then, exec into the pythonDebug pod and curl into the flask service, using port 5000
-'''bash
+```bash
 curl <ip-address>:5000/<route>
-'''
+```
 
 ### Overview Of Functionality ###
 Keys:
@@ -69,9 +69,9 @@ Arguments:
 'date': Clears entries from a specified date
 
 You use the following example command to delete all data:
-'''bash
+```bash
 curl '<flask-ip>:5000/delete/all'
-'''
+```
 
 2) Read
 Arguments:
@@ -80,26 +80,26 @@ Arguments:
 
 
 You use the following example command to get data for a date range:
-'''bash
+```bash
 curl '<flask-ip>:5000/get/date?ticker=AAPL&sector=n&size=n&valuation=n&d1='3/27/2020'&d2='5/10/2020'
-'''
+```
 Note that since this system hasn't yet implemented the full functionality to view more than one field at a time, all but one entry should be set to 'n'.
 
 3) Update
 You use the following example command to update data:
-'''bash
+```bash
 curl '<flask-ip>:5000/update?stock=AAPL&sector=TECH&size=LARGE&valuation=GRO&date='3/27/2020'&price=61.35'
-'''
+```
 
 4) Create
 You use the following example command to create a new dataset:
-'''bash
+```bash
 curl -X POST -H "content-type: application/json" -d '{"stock": "AAPL-TECH-LARGE-GRO", "price": {"4/09/2020": 66.37, "2/26/21": "121.05"}}' <flask-ip>:5000/create
-'''
+```
 
 5) Jobs
 You can use the following example command to plot an image:
-'''bash
+```bash
 curl -X POST -H "content-type: application/json" -d '{"stocks": ["ticker": "TICKER", "sector": "SECTOR", "size": "SIZE", "valuation": "VALUATION"}, {<another stock>}], "date_range": [date1, date2]}' <flask-ip>:<flask-port>/graph
-'''
+```
 
